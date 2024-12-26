@@ -1,3 +1,4 @@
+ 
 const cityInput = document.querySelector(".city-input");
 const searchButton = document.querySelector(".search-btn");
 const locationButton = document.querySelector(".location-btn");
@@ -41,7 +42,7 @@ const createWeatherCard = (cityName, weatherItem, index) => {
 };
 
 const getWeatherDetails = (cityName, lat, lon) => {
-  const WEATHER_API_URL = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_key}`;
+  const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_key}`;
 
   fetch(WEATHER_API_URL)
     .then((res) => res.json())
@@ -81,7 +82,7 @@ const getWeatherDetails = (cityName, lat, lon) => {
 const getCityCoordinates = () => {
   const cityName = cityInput.value.trim();
   if (!cityName) return;
-  const GEOCODING_API_URL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${API_key}`;
+  const GEOCODING_API_URL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${API_key}`;
 
   fetch(GEOCODING_API_URL)
     .then((res) => res.json())
@@ -95,11 +96,12 @@ const getCityCoordinates = () => {
     });
 };
 
+
 const getUserCoordinates = () => {
   navigator.geolocation.getCurrentPosition(
     position => {
         const { latitude, longitude } = position.coords;
-        const REVERSE_GEOCODING_URL = `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${API_key}`;
+        const REVERSE_GEOCODING_URL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${API_key}`;
 
         fetch(REVERSE_GEOCODING_URL)
           .then((res) => res.json())
@@ -125,3 +127,26 @@ searchButton.addEventListener("click", getCityCoordinates);
 cityInput.addEventListener(
   "keyup",
   (e) => e.key === "Enter" && getCityCoordinates());
+
+
+// Workflow of Weather app
+
+// Events: 
+// locationButton -> click -> getUserCoordinates
+// searchButton -> click -> getCityCoordinates
+// cityInput -> enter -> getCityCoordinates
+
+// Functions flow: 
+// getUserCoordinates -> getWeatherDetails -> createWeatherCard 
+
+// getCityCoordinates -> getWeatherDetails -> createWeatherCard
+
+
+// Functions details:
+// getCityCoordinates - is responsible for fetching weather details for a city based on the city's name
+
+// getUserCoordinates -  handle the geolocation API, construct the API URL, and handle the response from the OpenWeatherMap API.
+
+// getWeatherDetails - is responsible for fetching weather details from the API and updating the DOM with the fetched data.
+
+// createWeatherCard - responsible for generating the HTML
